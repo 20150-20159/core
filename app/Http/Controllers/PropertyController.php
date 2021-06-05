@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Http;
 
 class PropertyController extends Controller
 {
@@ -15,29 +16,29 @@ class PropertyController extends Controller
      */
     private $user;
 
-    public function __construct()
+    public function __construct(Request $request)
     {
-        $this->user = Auth::user();
+        $jwt = $request->bearerToken();
+
+        $response = Http::withHeaders([
+            'Accept' => 'application/json',
+            'Authorization' => 'Bearer ' . $jwt
+        ])->post(env('USERS_URL').'/auth/me');
+
+        $this->user = !empty($response->json()['id']) ? new User($response->json()) : null;
     }
 
     /**
      * Display a listing of the resource.
      *
-     * @return Response
      */
-    public function index(): Response
+    public function index()
     {
-        return Property::where('owner_id', $this->user->id)->get();
-    }
+        if (empty($this->user)) {
+            return response('Unauthorized', 401);
+        }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create(): Response
-    {
-        //
+        return Property::where('user_id', $this->user->id)->get();
     }
 
     /**
@@ -48,51 +49,85 @@ class PropertyController extends Controller
      */
     public function store(Request $request): Response
     {
-        //
+        if (empty($this->user)) {
+            return response('Unauthorized', 401);
+        }
+        Property::create($request->all());
+        return response('Property created', 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return Response
+     * @param int $id
+     * @return Property|Response
      */
-    public function show(int $id): Response
+    public function show(int $id)
     {
-        //
-    }
+        if (empty($this->user)) {
+            return response('Unauthorized', 401);
+        }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function edit(int $id): Response
-    {
-        //
+        $property = Property::find($id);
+        if (empty($property)) {
+            return response('Property not found', 404);
+        }
+
+        if ($property->user_id !== $this->user->id) {
+            return response('Unauthorized property', 401);
+        }
+
+        return $property;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  Request  $request
-     * @param  int  $id
+     * @param Request $request
+     * @param int $id
      * @return Response
      */
     public function update(Request $request, int $id): Response
     {
-        //
+        if (empty($this->user)) {
+            return response('Unauthorized', 401);
+        }
+
+        $property = Property::find($id);
+        if (empty($property)) {
+            return response('Property not found', 404);
+        }
+
+        if ($property->user_id !== $this->user->id) {
+            return response('Unauthorized property', 401);
+        }
+
+        $property->update($request->all());
+        return response('Property updated');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return Response
      */
     public function destroy(int $id): Response
     {
-        //
+        if (empty($this->user)) {
+            return response('Unauthorized', 401);
+        }
+
+        $property = Property::find($id);
+        if (empty($property)) {
+            return response('Property not found', 404);
+        }
+
+        if ($property->user_id !== $this->user->id) {
+            return response('Unauthorized property', 401);
+        }
+
+        $property->delete();
+        return response('Property deleted');
     }
 }
