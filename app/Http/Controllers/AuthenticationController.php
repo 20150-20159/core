@@ -36,7 +36,7 @@ class AuthenticationController extends Controller
     public function logout()
     {
         try {
-            Http::withToken(session('token'))->post(env('USERS_URL') . '/auth/logout');
+            Http::acceptJson()->withToken(session('token'))->post(env('USERS_URL') . '/auth/logout');
         } catch (\Exception $e) {
         }
 
