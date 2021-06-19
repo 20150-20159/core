@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * @property int user_id
+ * @property int transfer_user_id
  */
 class Property extends Model
 {

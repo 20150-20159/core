@@ -10,8 +10,7 @@
     <meta name="csrf-token" content="uS32J7T7RfmDVKHv6zr7m1MTk6e0kPlsCFJ9AsGk">
 
 
-    <title>
-        AdminLTE 3 </title>
+    <title>{{env('APP_NAME')}}</title>
 
 
     <link rel="stylesheet" href="vendor/icheck-bootstrap/icheck-bootstrap.min.css">
@@ -78,9 +77,7 @@
         </div>
         <div class="card-footer ">
             <p class="my-0">
-                <a href="register">
-                    Register a new account
-                </a>
+                <a href="{{route('register.show')}}">Register a new account</a>
             </p>
         </div>
     </div>

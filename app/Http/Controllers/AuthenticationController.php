@@ -33,6 +33,27 @@ class AuthenticationController extends Controller
         return redirect(route('login.show'));
     }
 
+    public function registerShow() {
+        return view('login.register');
+    }
+
+    public function register(Request $request) {
+        $response = Http::acceptJson()->post(env('USERS_URL'). "/register", [
+            'name' => $request->post('name'),
+            'surname' => $request->post('surname'),
+            'email' => $request->post('email'),
+            'password' => $request->post('password'),
+            'vat' => $request->post('vat'),
+        ]);
+
+        if ($response->status() !== 201) {
+            //TODO show error
+            return redirect(route('login'));
+        }
+
+        return redirect(route('login'));
+    }
+
     public function logout()
     {
         try {

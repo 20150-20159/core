@@ -10,18 +10,14 @@
     <meta name="csrf-token" content="uS32J7T7RfmDVKHv6zr7m1MTk6e0kPlsCFJ9AsGk">
 
 
-    <title>
-        AdminLTE 3 </title>
-
-
+    <title>{{env('APP_NAME')}}</title>
     <link rel="stylesheet" href="{{asset('vendor/fontawesome-free/css/all.min.css')}}">
     <link rel="stylesheet" href="{{asset('vendor/overlayScrollbars/css/OverlayScrollbars.min.css')}}">
-
-
     <link rel="stylesheet" href="{{asset('vendor/adminlte/dist/css/adminlte.min.css')}}">
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
 
 </head>
 
@@ -42,9 +38,9 @@
 
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
-        <a href="home" class="brand-link ">
+        <a href="{{route('dashboard.home')}}" class="brand-link ">
             <img src="{{asset('vendor/adminlte/dist/img/AdminLTELogo.png')}}"
-                 alt="AdminLTE"
+                 alt="{{env('APP_NAME')}}"
                  class="brand-image img-circle elevation-3"
                  style="opacity:.8">
             <span class="brand-text font-weight-light ">
@@ -64,7 +60,7 @@
                     @if(count($user->roles) === 2)
                         <li class="nav-header ">ADMIN</li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
+                            <a class="nav-link" href="{{route('admin.properties')}}">
                                 <i class="fas fa-fw fa-home text-red"></i>
                                 <p>All listings</p>
                             </a>
@@ -72,7 +68,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">
                                 <i class="far fa-fw fa-user text-yellow"></i>
-                                <p>Users</p>
+                                <p>Users (TODO)</p>
                             </a>
                         </li>
                     @endif
@@ -101,10 +97,9 @@
 <script src="{{asset('vendor/jquery/jquery.min.js')}}"></script>
 <script src="{{asset('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
 <script src="{{asset('vendor/overlayScrollbars/js/jquery.overlayScrollbars.min.js')}}"></script>
-
-
 <script src="{{asset('vendor/adminlte/dist/js/adminlte.min.js')}}"></script>
-
+<script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+@yield('js')
 
 </body>
 

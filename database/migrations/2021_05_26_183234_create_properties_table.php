@@ -16,8 +16,10 @@ class CreatePropertiesTable extends Migration
         Schema::create('properties', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('transfer_user_id')->nullable();
             $table->string('size');
             $table->string('address');
+            $table->string('deed')->nullable();
             $table->timestamps();
         });
     }

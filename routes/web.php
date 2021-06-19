@@ -11,19 +11,30 @@
 |
 */
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\PropertyController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/test', function () {
-   return view('master');
+Route::get('/', function () {
+   return redirect(route('login'));
 });
 
-Route::get('/dashboard/listings', [DashboardController::class, 'listings'])->name('dashboard.home');
+Route::get('/dashboard', [DashboardController::class, 'home'])->name('dashboard.home');
+Route::get('/dashboard/properties', [DashboardController::class, 'properties'])->name('dashboard.home');
+
+Route::post('/properties/initiateTransfer/{property}', [PropertyController::class, 'initiateTransfer'])->name('properties.initiateTransfer');
+Route::get('/properties/approveTransfer/{property}', [PropertyController::class, 'approveTransfer'])->name('properties.approve');
+Route::get('/properties/rejectTransfer/{property}', [PropertyController::class, 'rejectTransfer'])->name('properties.reject');
+
+Route::get('/dashboard/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
 
 //Accounts
 Route::get('/login',[AuthenticationController::class, 'loginShow'])->name('login.show');
 Route::post('/login',[AuthenticationController::class, 'login'])->name('login');
+Route::get('/register',[AuthenticationController::class, 'registerShow'])->name('register.show');
+Route::post('/register',[AuthenticationController::class, 'register'])->name('register');
 Route::get('/logout',[AuthenticationController::class, 'logout'])->name('logout');
 
 

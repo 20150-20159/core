@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Property;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 
-class DashboardController extends Controller
+class AdminController extends Controller
 {
     private function authenticate() {
         if (empty(session('token'))) {
@@ -22,16 +23,9 @@ class DashboardController extends Controller
         return json_decode($user);
     }
 
-    public function home() {
-        return redirect(route('dashboard.home'));
-    }
-
     public function properties() {
         $user = $this->authenticate();
-
-        $properties = Property::where('user_id', $user->id)->whereNull('transfer_user_id')->get();
-        $transferRequests = Property::where('transfer_user_id', $user->id)->get();
-
-        return view('dashboard.home', compact('user', 'properties', 'transferRequests'));
+        $properties = Property::all();
+        return view('admin.properties', compact('user','properties'));
     }
 }

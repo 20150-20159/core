@@ -130,4 +130,73 @@ class PropertyController extends Controller
         $property->delete();
         return response('Property deleted');
     }
+
+    private function authenticate() {
+        if (empty(session('token'))) {
+            return redirect(route('login.show'));
+        }
+
+        $user = Http::acceptJson()->withToken(session('token'))->post(env('USERS_URL') . '/auth/me');
+        try {
+            json_decode($user)->id;
+        } catch (\Exception $exception) {
+            return redirect(route('login.show'));
+        }
+
+        return json_decode($user);
+    }
+
+    public function approveTransfer(Property $property) {
+        $user = $this->authenticate();
+
+        //Check if user is the transfer beneficiary
+        if ($property->transfer_user_id != $user->id) {
+            //TODO Add error
+            return redirect(route('dashboard.home'));
+        }
+
+        $property->user_id = $property->transfer_user_id;
+        $property->transfer_user_id = null;
+        $property-> update();
+
+        return redirect(route('dashboard.home'));
+    }
+
+    public function rejectTransfer(Property $property) {
+        $user = $this->authenticate();
+
+        //Check if user is the transfer beneficiary
+        if ($property->transfer_user_id != $user->id) {
+            //TODO Add error
+            return redirect(route('dashboard.home'));
+        }
+
+        $property->transfer_user_id = null;
+        $property->update();
+
+        return redirect(route('dashboard.home'));
+    }
+
+    public function initiateTransfer(Property $property, Request $request) {
+        $user = $this->authenticate();
+
+        if ($property->user_id != $user->id) {
+            //TODO Add error
+            return redirect(route('dashboard.home'));
+        }
+
+        $response = Http::acceptJson()->get(env('USERS_URL'). "/getUserIdByVat", [
+            'vat' => $request->post('vat')
+        ]);
+
+        if ($response->status() !== 200) {
+            //TODO show error
+            return redirect(route('dashboard.home'));
+        }
+
+        $property->transfer_user_id = $response->body();
+        $property->update();
+
+        return redirect(route('dashboard.home'));
+    }
 }
