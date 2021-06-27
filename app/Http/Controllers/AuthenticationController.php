@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use MongoDB\Driver\Session;
 
 class AuthenticationController extends Controller
 {
@@ -21,14 +22,25 @@ class AuthenticationController extends Controller
             ]);
             if (!empty($response)) {
                 if (!empty($response->body())) {
-                    $token = json_decode($response->body(), true)['access_token'];
-                    if (!empty($token)) {
-                        session(['token' => $token]);
-                        return redirect(route('dashboard.home'));
+                    $response = json_decode($response->body(), true);
+
+                    if (empty($response['access_token'])) {
+                        session()->flash('error', 'Bad credentials');
+                        return redirect(route('login.show'));
+                    }
+
+                    $token = $response['access_token'];
+                    session(['token' => $token]);
+                    return redirect(route('dashboard.home'));
                     }
                 }
+                session()->flash('error', 'Error in communication');
             }
-        } catch (\Exception $e) {}
+            catch (\Exception $e) {
+                if(!empty($e)) {
+                    session()->flash('error', 'Error in communication');
+                }
+            }
 
         return redirect(route('login.show'));
     }

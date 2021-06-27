@@ -72,7 +72,9 @@
                         </button>
                     </div>
                 </div>
-
+                @if(!empty(session()->get('error')))
+                    <div class="row" style="color: red">{{session()->get('error')}}</div>
+                @endif
             </form>
         </div>
         <div class="card-footer ">
