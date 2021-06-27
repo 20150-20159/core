@@ -23,7 +23,9 @@ class DashboardController extends Controller
     }
 
     public function home() {
-        return redirect(route('dashboard.home'));
+        $user = $this->authenticate();
+
+        return redirect(route('dashboard.home', compact('user')));
     }
 
     public function properties() {

@@ -27,6 +27,7 @@ Route::get('/dashboard/properties', [DashboardController::class, 'properties'])-
 Route::post('/properties/initiateTransfer/{property}', [PropertyController::class, 'initiateTransfer'])->name('properties.initiateTransfer');
 Route::get('/properties/approveTransfer/{property}', [PropertyController::class, 'approveTransfer'])->name('properties.approve');
 Route::get('/properties/rejectTransfer/{property}', [PropertyController::class, 'rejectTransfer'])->name('properties.reject');
+Route::get('/properties/deed/{property}', [PropertyController::class, 'deed'])->name('properties.deed');
 
 Route::get('/dashboard/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
 

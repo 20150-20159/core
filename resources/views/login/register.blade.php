@@ -35,8 +35,7 @@
 
     <div class="login-logo">
         <a href="home">
-            <img src="vendor/adminlte/dist/img/AdminLTELogo.png" height="50">
-            <b>Admin</b>LTE
+            <b>{{env('APP_NAME')}}</b>
         </a>
     </div>
     <div class="card card-outline card-primary">

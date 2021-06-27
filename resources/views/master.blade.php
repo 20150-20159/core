@@ -39,12 +39,8 @@
 
     <aside class="main-sidebar sidebar-dark-primary elevation-4">
         <a href="{{route('dashboard.home')}}" class="brand-link ">
-            <img src="{{asset('vendor/adminlte/dist/img/AdminLTELogo.png')}}"
-                 alt="{{env('APP_NAME')}}"
-                 class="brand-image img-circle elevation-3"
-                 style="opacity:.8">
             <span class="brand-text font-weight-light ">
-        <b>Admin</b>LTE
+                <b>{{env('APP_NAME')}}</b>
     </span>
         </a>
         <div class="sidebar">
@@ -63,12 +59,6 @@
                             <a class="nav-link" href="{{route('admin.properties')}}">
                                 <i class="fas fa-fw fa-home text-red"></i>
                                 <p>All listings</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <i class="far fa-fw fa-user text-yellow"></i>
-                                <p>Users (TODO)</p>
                             </a>
                         </li>
                     @endif

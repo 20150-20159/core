@@ -24,7 +24,6 @@
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
 
-
 </head>
 
 <body class="login-page">
@@ -35,8 +34,7 @@
 
     <div class="login-logo">
         <a href="home">
-            <img src="vendor/adminlte/dist/img/AdminLTELogo.png" height="50">
-            <b>Admin</b>LTE
+            <b>{{env('APP_NAME')}}</b>
         </a>
     </div>
     <div class="card card-outline card-primary">

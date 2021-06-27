@@ -9,6 +9,9 @@ use Illuminate\Database\Eloquent\Model;
 /**
  * @property int user_id
  * @property int transfer_user_id
+ * @property false|mixed|string deed
+ * @property array|mixed|string|null size
+ * @property array|mixed|string|null address
  */
 class Property extends Model
 {

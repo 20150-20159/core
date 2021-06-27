@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
 
 class PropertyController extends Controller
 {
@@ -44,16 +45,29 @@ class PropertyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  Request  $request
-     * @return Response
+     * @param Request $request
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function store(Request $request): Response
+    public function store(Request $request)
     {
-        if (empty($this->user)) {
-            return response('Unauthorized', 401);
+        //Validate request
+        $request->validate([
+            'deed_file' => 'mimes:jpg,bmp,png'
+        ]);
+
+        $file = $request->file('deed_file')->store('');
+        if (empty($file)) {
+            session()->flash('error', 'Error in file upload');
+            return redirect(route('dashboard.home'));
         }
-        Property::create($request->all());
-        return response('Property created', 201);
+
+        $property = new Property();
+        $property->address = $request->post('address');
+        $property->size = $request->post('size');
+        $property->user_id = $request->post('user_id');
+        $property->deed = $file;
+        $property->save();
+        return redirect(route('dashboard.home'));
     }
 
     /**
@@ -198,5 +212,9 @@ class PropertyController extends Controller
         $property->update();
 
         return redirect(route('dashboard.home'));
+    }
+
+    public function deed(Property $property) {
+        return Storage::download($property->deed, $property->address. 'deed.pdf');
     }
 }
