@@ -52,7 +52,7 @@ class PropertyController extends Controller
     {
         //Validate request
         $request->validate([
-            'deed_file' => 'mimes:jpg,bmp,png'
+            'deed_file' => 'mimes:pdf'
         ]);
 
         $file = $request->file('deed_file')->store('');
