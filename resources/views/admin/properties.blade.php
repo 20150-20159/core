@@ -28,7 +28,11 @@
                                 <td>{{$property->size}}</td>
                                 <td>{{$property->user_id}}</td>
                                 <td>{{empty($property->transfer_user_id) ? '-' : 'Pending transfer to ' . $property->transfer_user_id}}</td>
-                                <td>{{$property->deed}}</td>
+                                @if(!empty($property->deed))
+                                    <td><a class="btn btn-success" href="{{route('properties.deed', $property->id)}}"><i class="fa fa-download"> Get Deed</i></a></td>
+                                @else
+                                    <td>-</td>
+                                @endif
                             </tr>
                         @endforeach
                         </tfoot>

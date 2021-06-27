@@ -52,7 +52,9 @@ class PropertyController extends Controller
     {
         //Validate request
         $request->validate([
-            'deed_file' => 'mimes:pdf'
+            'address' => 'required|max:255',
+            'size' => 'required|numeric|max:255',
+            'deed_file' => 'required|mimes:pdf',
         ]);
 
         $file = $request->file('deed_file')->store('');
@@ -173,6 +175,13 @@ class PropertyController extends Controller
         $property->transfer_user_id = null;
         $property-> update();
 
+        try {
+            Http::post(env('NOTIFICATIONS_URL').'/requestSuccess', [
+                'name' => $user->name . ' ' . $user->surname,
+                'to' => $user->email,
+            ]);
+        } catch (\Exception $e) {}
+
         return redirect(route('dashboard.home'));
     }
 
@@ -210,6 +219,13 @@ class PropertyController extends Controller
 
         $property->transfer_user_id = $response->body();
         $property->update();
+
+        try {
+            Http::post(env('NOTIFICATIONS_URL').'/submissionRequest', [
+                'name' => $user->name . ' ' . $user->surname,
+                'to' => $user->email,
+            ]);
+        } catch (\Exception $e) {}
 
         return redirect(route('dashboard.home'));
     }
