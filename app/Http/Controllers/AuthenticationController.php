@@ -63,6 +63,7 @@ class AuthenticationController extends Controller
             return redirect(route('login'));
         }
 
+        session()->flash('success', true);
         return redirect(route('login'));
     }
 

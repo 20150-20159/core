@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: core
+      app: myappcore
+  template:
+    metadata:
+      labels:
+        component: core
+        app: myappcore
+    spec:
+      containers:
+        - name: core
+          image: 'mitsosf/core:4.0.0'
+          ports:
+            - containerPort: 80
+          imagePullPolicy: Always

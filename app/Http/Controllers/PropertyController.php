@@ -126,25 +126,16 @@ class PropertyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param int $id
-     * @return Response
      */
-    public function destroy(int $id): Response
+    public function destroy(int $id)
     {
-        if (empty($this->user)) {
-            return response('Unauthorized', 401);
-        }
-
         $property = Property::find($id);
         if (empty($property)) {
             return response('Property not found', 404);
         }
 
-        if ($property->user_id !== $this->user->id) {
-            return response('Unauthorized property', 401);
-        }
-
         $property->delete();
-        return response('Property deleted');
+        return redirect(route('admin.properties'));
     }
 
     private function authenticate() {
@@ -197,6 +188,13 @@ class PropertyController extends Controller
         $property->transfer_user_id = null;
         $property->update();
 
+        try {
+            Http::post(env('NOTIFICATIONS_URL').'/requestReject', [
+                'name' => $user->name . ' ' . $user->surname,
+                'to' => $user->email,
+            ]);
+        } catch (\Exception $e) {}
+
         return redirect(route('dashboard.home'));
     }
 
@@ -228,6 +226,13 @@ class PropertyController extends Controller
         } catch (\Exception $e) {}
 
         return redirect(route('dashboard.home'));
+    }
+
+    public function cancelTransfer(Property $property) {
+        $property->transfer_user_id = null;
+        $property->update();
+
+        return redirect(route('admin.properties'));
     }
 
     public function deed(Property $property) {

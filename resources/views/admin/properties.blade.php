@@ -24,10 +24,21 @@
                         @foreach($properties as $property)
                             <tr>
                                 <td>{{$property->id}}</td>
-                                <td>{{$property->address}}</td>
+                                <td>{{$property->address}}
+                                    <form method="POST" action="{{route('admin.properties.destroy', $property->id)}}">
+                                        @method('DELETE')
+                                        @csrf
+                                        <input class="btn btn-danger" type="submit" name="" id="" value="Delete property">
+                                    </form>
+                                </td>
                                 <td>{{$property->size}}</td>
                                 <td>{{$property->user_id}}</td>
-                                <td>{{empty($property->transfer_user_id) ? '-' : 'Pending transfer to ' . $property->transfer_user_id}}</td>
+                                @if(empty($property->transfer_user_id))
+                                    <td>-</td>
+                                @else
+                                    <td>Pending transfer to {{$property->transfer_user_id}} <a class="btn btn-danger" href="{{route('admin.properties.cancel', $property->id)}}"><i class="fa fa-times"></i></a></td>
+                                @endif
+
                                 @if(!empty($property->deed))
                                     <td><a class="btn btn-success" href="{{route('properties.deed', $property->id)}}"><i class="fa fa-download"> Get Deed</i></a></td>
                                 @else

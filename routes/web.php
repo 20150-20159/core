@@ -30,6 +30,8 @@ Route::get('/properties/rejectTransfer/{property}', [PropertyController::class, 
 Route::get('/properties/deed/{property}', [PropertyController::class, 'deed'])->name('properties.deed');
 
 Route::get('/dashboard/admin/properties', [AdminController::class, 'properties'])->name('admin.properties');
+Route::delete('/properties/{id}', [PropertyController::class, 'destroy'])->name('admin.properties.destroy');
+Route::get('/properties/cancel/{property}', [PropertyController::class, 'cancelTransfer'])->name('admin.properties.cancel');
 
 //Accounts
 Route::get('/login',[AuthenticationController::class, 'loginShow'])->name('login.show');

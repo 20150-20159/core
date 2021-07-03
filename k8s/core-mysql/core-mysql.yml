@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: core-mysql
+  labels:
+    app: myappdb
+spec:
+  type: ClusterIP
+  ports:
+    - port: 3306
+  selector:
+    component: core-mysql
+    app: myappdb
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: core-mysql-pv-claim
+  labels:
+    app: core-mysql-app
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: core-mysql
+  labels:
+    app: myappdb
+spec:
+  selector:
+    matchLabels:
+      component: core-mysql
+      app: myappdb
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        component: core-mysql
+        app: myappdb
+    spec:
+      containers:
+        - image: mysql:8
+          name: core-mysql
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: 'root'
+            - name: MYSQL_DATABASE
+              value: 'core'
+          ports:
+            - containerPort: 3306
+          volumeMounts:
+            - name: core-mysql-persistent-storage
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: core-mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: core-mysql-pv-claim

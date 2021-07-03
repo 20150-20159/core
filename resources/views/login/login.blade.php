@@ -73,6 +73,9 @@
                 @if(!empty(session()->get('error')))
                     <div class="row" style="color: red">{{session()->get('error')}}</div>
                 @endif
+                @if(!empty(session()->get('success')))
+                    <div class="row" style="color: green">You have successfully signed up</div>
+                @endif
             </form>
         </div>
         <div class="card-footer ">
